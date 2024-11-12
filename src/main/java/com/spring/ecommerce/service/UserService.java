@@ -1,20 +1,22 @@
 package com.spring.ecommerce.service;
 
+import com.spring.ecommerce.dto.UserResponse;
 import com.spring.ecommerce.entity.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
-    List<User> findAll();
+    List<UserResponse> findAll();
 
-    User findByEmail(String email);
+    UserResponse findByEmail(String email);
 
-    User saveUser(User user);
+    UserResponse findUserById(long id);
 
-    User updateUser(String email, User user);
+    UserResponse saveUser(User user);
 
-    User deleteUser(String email);
+    UserResponse updateUser(long id, User user);
+
+    UserResponse deleteUser(long id);
 
 }

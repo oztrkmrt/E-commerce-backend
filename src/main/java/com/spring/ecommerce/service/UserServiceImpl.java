@@ -1,5 +1,7 @@
 package com.spring.ecommerce.service;
 
+import com.spring.ecommerce.dto.DtoConverter;
+import com.spring.ecommerce.dto.UserResponse;
 import com.spring.ecommerce.entity.User;
 import com.spring.ecommerce.repository.AddressRepository;
 import com.spring.ecommerce.repository.UserRepository;
@@ -22,28 +24,40 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserResponse> findAll() {
+        return DtoConverter.converUserListToUserResponseList(userRepository.findAll());
     }
 
     @Override
-    public User findByEmail(String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isPresent()){
-            return optionalUser.get();
-        }
-        //TODO: Exception handling yap
-        return null;
+    public UserResponse findByEmail(String email) {
+        User user = userRepository
+                .findByEmail(email)
+                .orElseThrow(()-> {
+                    //TODO: Exception handling yap
+                    throw new RuntimeException("User with given email not exist: " + email);
+                });
+        return DtoConverter.converUserToUserResponse(user);
     }
 
     @Override
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public UserResponse findUserById(long id) {
+        User user = userRepository
+                .findById(id)
+                .orElseThrow(()-> {
+                    //TODO: Exception handling yap
+                    throw new RuntimeException("User with given id not exist: " + id);
+                });
+        return DtoConverter.converUserToUserResponse(user);
     }
 
     @Override
-    public User updateUser(String email, User updatedUser) {
-        Optional<User> existingUserOpt = userRepository.findByEmail(email);
+    public UserResponse saveUser(User user) {
+        return DtoConverter.converUserToUserResponse(userRepository.save(user));
+    }
+
+    @Override
+    public UserResponse updateUser(long id, User updatedUser) {
+        Optional<User> existingUserOpt = userRepository.findById(id);
 
         if (existingUserOpt.isPresent()){
             User existingUser = existingUserOpt.get();
@@ -51,7 +65,7 @@ public class UserServiceImpl implements UserService{
             existingUser.setEmail(updatedUser.getEmail());
             existingUser.setPassword(updatedUser.getPassword());
 
-            return userRepository.save(existingUser);
+            return DtoConverter.converUserToUserResponse(userRepository.save(existingUser));
         } else {
             //TODO: Exception handling ister
             throw new RuntimeException("User not found: " + updatedUser);
@@ -59,9 +73,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User deleteUser(String email) {
-        User deletedUser = findByEmail(email);
+    public UserResponse deleteUser(long id) {
+        User deletedUser = userRepository
+                .findById(id)
+                .orElseThrow(()-> {
+            //TODO: Exception handling yap
+            throw new RuntimeException("User with given id not exist: " + id);
+        });
         userRepository.delete(deletedUser);
-        return deletedUser;
+        return DtoConverter.converUserToUserResponse(deletedUser);
     }
 }
