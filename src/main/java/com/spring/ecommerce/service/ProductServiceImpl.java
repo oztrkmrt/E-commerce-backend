@@ -1,8 +1,10 @@
 package com.spring.ecommerce.service;
 
 import com.spring.ecommerce.entity.Product;
+import com.spring.ecommerce.exceptions.EcommerceException;
 import com.spring.ecommerce.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,8 +31,7 @@ public class ProductServiceImpl implements ProductService{
         if (foundProduct.isPresent()){
             return foundProduct.get();
         }
-        //TODO: Exception handling yap
-        return null;
+        throw new EcommerceException("Product with given id not exist: " + id, HttpStatus.NOT_FOUND);
     }
 
     @Override
@@ -54,8 +55,7 @@ public class ProductServiceImpl implements ProductService{
 
             return productRepository.save(existingProduct);
         } else {
-            //TODO: Exception handling seni bekler
-            throw new RuntimeException("Product not found: " + updatedProduct);
+            throw new EcommerceException("Product with given id not exist: " + id, HttpStatus.NOT_FOUND);
         }
     }
 

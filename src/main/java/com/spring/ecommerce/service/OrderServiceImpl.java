@@ -2,8 +2,10 @@ package com.spring.ecommerce.service;
 
 import com.spring.ecommerce.entity.Order;
 import com.spring.ecommerce.entity.User;
+import com.spring.ecommerce.exceptions.EcommerceException;
 import com.spring.ecommerce.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,8 +32,7 @@ public class OrderServiceImpl implements OrderService{
         if (foundOrder.isPresent()){
             return foundOrder.get();
         }
-        //TODO: Exception handling yap
-        return null;
+        throw new EcommerceException("Order with given id not exist: " + id, HttpStatus.NOT_FOUND);
     }
 
     @Override

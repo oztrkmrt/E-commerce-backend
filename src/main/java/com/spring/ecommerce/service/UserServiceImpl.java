@@ -3,9 +3,11 @@ package com.spring.ecommerce.service;
 import com.spring.ecommerce.dto.DtoConverter;
 import com.spring.ecommerce.dto.UserResponse;
 import com.spring.ecommerce.entity.User;
+import com.spring.ecommerce.exceptions.EcommerceException;
 import com.spring.ecommerce.repository.AddressRepository;
 import com.spring.ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,12 +17,10 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
-    private final AddressRepository addressRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, AddressRepository addressRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.addressRepository = addressRepository;
     }
 
     @Override
@@ -33,8 +33,7 @@ public class UserServiceImpl implements UserService{
         User user = userRepository
                 .findByEmail(email)
                 .orElseThrow(()-> {
-                    //TODO: Exception handling yap
-                    throw new RuntimeException("User with given email not exist: " + email);
+                    throw new EcommerceException("User with given email not exist: " + email, HttpStatus.NOT_FOUND);
                 });
         return DtoConverter.converUserToUserResponse(user);
     }
@@ -44,8 +43,7 @@ public class UserServiceImpl implements UserService{
         User user = userRepository
                 .findById(id)
                 .orElseThrow(()-> {
-                    //TODO: Exception handling yap
-                    throw new RuntimeException("User with given id not exist: " + id);
+                    throw new EcommerceException("User with given id not exist: " + id, HttpStatus.NOT_FOUND);
                 });
         return DtoConverter.converUserToUserResponse(user);
     }
@@ -67,8 +65,7 @@ public class UserServiceImpl implements UserService{
 
             return DtoConverter.converUserToUserResponse(userRepository.save(existingUser));
         } else {
-            //TODO: Exception handling ister
-            throw new RuntimeException("User not found: " + updatedUser);
+            throw new EcommerceException("User not exist: " + updatedUser, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -77,8 +74,7 @@ public class UserServiceImpl implements UserService{
         User deletedUser = userRepository
                 .findById(id)
                 .orElseThrow(()-> {
-            //TODO: Exception handling yap
-            throw new RuntimeException("User with given id not exist: " + id);
+                    throw new EcommerceException("User with given id not exist: " + id, HttpStatus.NOT_FOUND);
         });
         userRepository.delete(deletedUser);
         return DtoConverter.converUserToUserResponse(deletedUser);
