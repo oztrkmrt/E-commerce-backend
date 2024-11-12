@@ -12,8 +12,8 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService{
 
-    private UserRepository userRepository;
-    private AddressRepository addressRepository;
+    private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, AddressRepository addressRepository) {
@@ -27,8 +27,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User findById(long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
+    public User findByEmail(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()){
             return optionalUser.get();
         }
