@@ -19,17 +19,22 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> getAllProducts() {
+    public List<Product> findAllProducts() {
         return productRepository.findAll();
     }
 
     @Override
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
+    public Product findProductById(Long id) {
+        Optional<Product> foundProduct = productRepository.findById(id);
+        if (foundProduct.isPresent()){
+            return foundProduct.get();
+        }
+        //TODO: Exception handling yap
+        return null;
     }
 
     @Override
-    public Product addProduct(Product product) {
+    public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
 
@@ -48,25 +53,26 @@ public class ProductServiceImpl implements ProductService{
             existingProduct.setImgUrl(updatedProduct.getImgUrl());
 
             return productRepository.save(existingProduct);
-        } else{
+        } else {
+            //TODO: Exception handling seni bekler
             throw new RuntimeException("Product not found: " + updatedProduct);
         }
     }
 
     @Override
     public Product deleteProduct(Long id) {
-        Product deletedProduct = getProductById(id).orElseThrow(()->new RuntimeException("Product with given id is not exist: " + id));
+        Product deletedProduct = findProductById(id);
         productRepository.delete(deletedProduct);
         return deletedProduct;
     }
 
     @Override
-    public List<Product> getProductsByCategory(String category) {
+    public List<Product> findProductsByCategory(String category) {
         return productRepository.findAllByCategory(category);
     }
 
     @Override
-    public List<Product> getProductsByName(String name) {
+    public List<Product> findProductsByName(String name) {
         return productRepository.findAllByName(name);
     }
 }

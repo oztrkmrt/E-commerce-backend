@@ -23,8 +23,8 @@ public class User implements UserDetails {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "full_name")
+    private String fullName;
 
     @Column(name = "email")
     private String email;

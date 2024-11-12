@@ -7,17 +7,17 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    List<Product> getAllProducts();
+    List<Product> findAllProducts();
 
-    Optional<Product> getProductById(Long id);
+    Product findProductById(Long id);
 
-    Product addProduct(Product product);
+    Product saveProduct(Product product);
 
     Product updateProduct(Long id, Product product);
 
     Product deleteProduct(Long id);
 
-    List<Product> getProductsByCategory(String category);
+    List<Product> findProductsByCategory(String category);
 
-    List<Product> getProductsByName(String name);
+    List<Product> findProductsByName(String name);
 }
