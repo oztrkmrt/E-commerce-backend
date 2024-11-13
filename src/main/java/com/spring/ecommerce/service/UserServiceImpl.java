@@ -90,9 +90,3 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         });
     }
 }
-
-//{
-//        "fullName": "Mert User",
-//        "email": "mert@usero.com",
-//        "password": "userpass321"
-//        }
