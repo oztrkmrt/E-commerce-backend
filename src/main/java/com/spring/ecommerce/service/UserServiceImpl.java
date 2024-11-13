@@ -4,17 +4,19 @@ import com.spring.ecommerce.dto.DtoConverter;
 import com.spring.ecommerce.dto.UserResponse;
 import com.spring.ecommerce.entity.User;
 import com.spring.ecommerce.exceptions.EcommerceException;
-import com.spring.ecommerce.repository.AddressRepository;
 import com.spring.ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -26,16 +28,6 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<UserResponse> findAll() {
         return DtoConverter.convertUserListToUserResponseList(userRepository.findAll());
-    }
-
-    @Override
-    public UserResponse findByEmail(String email) {
-        User user = userRepository
-                .findByEmail(email)
-                .orElseThrow(()-> {
-                    throw new EcommerceException("User with given email not exist: " + email, HttpStatus.NOT_FOUND);
-                });
-        return DtoConverter.convertUserToUserResponse(user);
     }
 
     @Override
@@ -89,4 +81,18 @@ public class UserServiceImpl implements UserService{
         userRepository.delete(deletedUser);
         return DtoConverter.convertUserToUserResponse(deletedUser);
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> {
+                throw new UsernameNotFoundException("User credentials are not valid");
+        });
+    }
 }
+
+//{
+//        "fullName": "Mert User",
+//        "email": "mert@usero.com",
+//        "password": "userpass321"
+//        }

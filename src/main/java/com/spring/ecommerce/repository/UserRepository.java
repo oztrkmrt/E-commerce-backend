@@ -1,5 +1,6 @@
 package com.spring.ecommerce.repository;
 
+import com.spring.ecommerce.dto.UserResponse;
 import com.spring.ecommerce.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

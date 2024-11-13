@@ -9,8 +9,6 @@ public interface UserService {
 
     List<UserResponse> findAll();
 
-    UserResponse findByEmail(String email);
-
     UserResponse findUserById(long id);
 
     User findUserEntityById(long id);
