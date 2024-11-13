@@ -35,6 +35,11 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
+    public Address saveAddress(Address address) {
+        return addressRepository.save(address);
+    }
+
+    @Override
     public Address updateAddress(long id, Address updatedAddress) {
         Optional<Address> existingAddressOpt = addressRepository.findById(id);
 

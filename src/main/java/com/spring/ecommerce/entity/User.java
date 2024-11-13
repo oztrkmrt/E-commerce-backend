@@ -46,25 +46,11 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Order> orders;
 
-    public void addCreditCard(CreditCard creditCard){
-        if (creditCards == null){
-            creditCards = new HashSet<>();
-        }
-        creditCards.add(creditCard);
-    }
-
     public void addAddress(Address address){
         if (addresses == null){
             addresses = new HashSet<>();
         }
         addresses.add(address);
-    }
-
-    public void addOrder(Order order){
-        if (orders == null){
-            orders = new ArrayList<>();
-        }
-        orders.add(order);
     }
 
 }

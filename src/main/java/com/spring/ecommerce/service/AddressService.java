@@ -10,6 +10,8 @@ public interface AddressService {
 
     Address findAddressById(long id);
 
+    Address saveAddress(Address address);
+
     Address updateAddress(long id, Address address);
 
     Address deleteAddress(long id);

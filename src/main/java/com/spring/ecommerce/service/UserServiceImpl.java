@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService{
 
             return DtoConverter.convertUserToUserResponse(userRepository.save(existingUser));
         } else {
-            throw new EcommerceException("User not exist: " + updatedUser, HttpStatus.NOT_FOUND);
+            throw new EcommerceException("User not exist", HttpStatus.NOT_FOUND);
         }
     }
 
