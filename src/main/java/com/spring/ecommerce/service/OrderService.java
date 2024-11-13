@@ -12,10 +12,14 @@ public interface OrderService {
 
     Order findOrderById(long id);
 
+    Order saveOrder(Order order);
+
     Order updateOrder(Long id, Order order);
 
     Order deleteOrder(Long id);
 
-    List<Order> findOrdersByCustomer(User user);
+    List<Order> findOrdersByCustomerId(long id);
+
+    List<Order> findOrdersByCustomerName(String name);
 
 }

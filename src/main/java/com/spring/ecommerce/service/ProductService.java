@@ -1,5 +1,7 @@
 package com.spring.ecommerce.service;
 
+import com.spring.ecommerce.dto.ProductResponse;
+import com.spring.ecommerce.entity.Category;
 import com.spring.ecommerce.entity.Product;
 
 import java.util.List;
@@ -7,17 +9,19 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    List<Product> findAllProducts();
+    List<ProductResponse> findAllProducts();
 
-    Product findProductById(Long id);
+    ProductResponse findProductById(Long id);
 
-    Product saveProduct(Product product);
+    Product findProductEntityById(Long id);
 
-    Product updateProduct(Long id, Product product);
+    ProductResponse saveProduct(Product product);
 
-    Product deleteProduct(Long id);
+    ProductResponse updateProduct(Long id, Product product);
 
-    List<Product> findProductsByCategory(String category);
+    ProductResponse deleteProduct(Long id);
 
-    List<Product> findProductsByName(String name);
+    List<ProductResponse> findProductsByCategory(String category);
+
+    List<ProductResponse> findProductsByName(String name);
 }

@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<UserResponse> findAll() {
-        return DtoConverter.converUserListToUserResponseList(userRepository.findAll());
+        return DtoConverter.convertUserListToUserResponseList(userRepository.findAll());
     }
 
     @Override
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(()-> {
                     throw new EcommerceException("User with given email not exist: " + email, HttpStatus.NOT_FOUND);
                 });
-        return DtoConverter.converUserToUserResponse(user);
+        return DtoConverter.convertUserToUserResponse(user);
     }
 
     @Override
@@ -45,12 +45,22 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(()-> {
                     throw new EcommerceException("User with given id not exist: " + id, HttpStatus.NOT_FOUND);
                 });
-        return DtoConverter.converUserToUserResponse(user);
+        return DtoConverter.convertUserToUserResponse(user);
+    }
+
+    @Override
+    public User findUserEntityById(long id) {
+        User user = userRepository
+                .findById(id)
+                .orElseThrow(()-> {
+                    throw new EcommerceException("User with given id not exist: " + id, HttpStatus.NOT_FOUND);
+                });
+        return user;
     }
 
     @Override
     public UserResponse saveUser(User user) {
-        return DtoConverter.converUserToUserResponse(userRepository.save(user));
+        return DtoConverter.convertUserToUserResponse(userRepository.save(user));
     }
 
     @Override
@@ -63,7 +73,7 @@ public class UserServiceImpl implements UserService{
             existingUser.setEmail(updatedUser.getEmail());
             existingUser.setPassword(updatedUser.getPassword());
 
-            return DtoConverter.converUserToUserResponse(userRepository.save(existingUser));
+            return DtoConverter.convertUserToUserResponse(userRepository.save(existingUser));
         } else {
             throw new EcommerceException("User not exist: " + updatedUser, HttpStatus.NOT_FOUND);
         }
@@ -77,6 +87,6 @@ public class UserServiceImpl implements UserService{
                     throw new EcommerceException("User with given id not exist: " + id, HttpStatus.NOT_FOUND);
         });
         userRepository.delete(deletedUser);
-        return DtoConverter.converUserToUserResponse(deletedUser);
+        return DtoConverter.convertUserToUserResponse(deletedUser);
     }
 }

@@ -1,5 +1,8 @@
 package com.spring.ecommerce.service;
 
+import com.spring.ecommerce.dto.DtoConverter;
+import com.spring.ecommerce.dto.ProductResponse;
+import com.spring.ecommerce.entity.Category;
 import com.spring.ecommerce.entity.Product;
 import com.spring.ecommerce.exceptions.EcommerceException;
 import com.spring.ecommerce.repository.ProductRepository;
@@ -21,26 +24,36 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> findAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponse> findAllProducts() {
+        return DtoConverter.convertProductListToProductResponseList(productRepository.findAll());
     }
 
     @Override
-    public Product findProductById(Long id) {
+    public ProductResponse findProductById(Long id) {
         Optional<Product> foundProduct = productRepository.findById(id);
         if (foundProduct.isPresent()){
-            return foundProduct.get();
+            return DtoConverter.convertProductToProductResponse(foundProduct.get());
         }
         throw new EcommerceException("Product with given id not exist: " + id, HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
+    public Product findProductEntityById(Long id) {
+        Product foundProduct = productRepository
+                .findById(id)
+                .orElseThrow(()->{
+                    throw new EcommerceException("Product with given id not exist: " + id, HttpStatus.NOT_FOUND);
+                });
+        return foundProduct;
     }
 
     @Override
-    public Product updateProduct(Long id, Product updatedProduct) {
+    public ProductResponse saveProduct(Product product) {
+        return DtoConverter.convertProductToProductResponse(productRepository.save(product));
+    }
+
+    @Override
+    public ProductResponse updateProduct(Long id, Product updatedProduct) {
         Optional<Product> existingProductOpt = productRepository.findById(id);
 
         if (existingProductOpt.isPresent()){
@@ -53,26 +66,31 @@ public class ProductServiceImpl implements ProductService{
             existingProduct.setCategory(updatedProduct.getCategory());
             existingProduct.setImgUrl(updatedProduct.getImgUrl());
 
-            return productRepository.save(existingProduct);
+            return DtoConverter.convertProductToProductResponse(productRepository.save(existingProduct));
         } else {
             throw new EcommerceException("Product with given id not exist: " + id, HttpStatus.NOT_FOUND);
         }
     }
 
     @Override
-    public Product deleteProduct(Long id) {
-        Product deletedProduct = findProductById(id);
+    public ProductResponse deleteProduct(Long id) {
+        Product deletedProduct = productRepository
+                .findById(id)
+                .orElseThrow(()-> {
+                            throw new EcommerceException("Product with given id not exist: " + id, HttpStatus.NOT_FOUND);
+                        });
         productRepository.delete(deletedProduct);
-        return deletedProduct;
+        return DtoConverter.convertProductToProductResponse(deletedProduct);
     }
 
     @Override
-    public List<Product> findProductsByCategory(String category) {
-        return productRepository.findAllByCategory(category);
+    public List<ProductResponse> findProductsByCategory(String category) {
+        Category categoryname = Category.valueOf(category.toUpperCase());
+        return DtoConverter.convertProductListToProductResponseList(productRepository.findAllByCategory(categoryname));
     }
 
     @Override
-    public List<Product> findProductsByName(String name) {
-        return productRepository.findAllByName(name);
+    public List<ProductResponse> findProductsByName(String name) {
+        return DtoConverter.convertProductListToProductResponseList(productRepository.findAllByName(name));
     }
 }

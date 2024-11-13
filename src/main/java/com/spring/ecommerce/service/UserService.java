@@ -13,6 +13,8 @@ public interface UserService {
 
     UserResponse findUserById(long id);
 
+    User findUserEntityById(long id);
+
     UserResponse saveUser(User user);
 
     UserResponse updateUser(long id, User user);
