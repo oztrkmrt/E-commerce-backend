@@ -30,12 +30,13 @@ public class Order {
     @JsonIgnore
     private User user;
 
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "product_order", schema = "ecommerce",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     @JsonManagedReference
     private List<Product> products;
+
 
     public void addProducts(Product product){
         if (products == null){
@@ -43,6 +44,5 @@ public class Order {
         }
         products.add(product);
     }
-
 
 }

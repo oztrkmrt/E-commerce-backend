@@ -42,9 +42,9 @@ public class Product {
     @Column(name = "img_url")
     private String imgUrl;
 
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH},
-                mappedBy = "products")
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "products")
     @JsonBackReference
-    List<Order> orders;
+    private List<Order> orders;
+
 
 }
